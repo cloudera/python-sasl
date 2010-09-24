@@ -1,0 +1,5 @@
+sasl/saslwrapper.py
+sasl/saslwrapper_wrap.cpp
+*.swp
+build
+*.pyc
