@@ -12,6 +12,7 @@ sasl_module = Extension('_saslwrapper',
                            swig_opts=["-c++"],
                            include_dirs=["sasl"],
                            libraries=["sasl2"],
+                           language="c++",
                            )
 
 setup (name = 'sasl',
@@ -20,5 +21,8 @@ setup (name = 'sasl',
        description = """sasl""",
        ext_modules = [sasl_module],
        py_modules = ["sasl.saslwrapper"],
+       # Necessary to workaround a distutils bug in earlier pythons:
+       # http://mail.python.org/pipermail/distutils-sig/2005-November/005387.html
+       options = { 'build_ext': {'swig_opts':'-c++'} }
        )
 
