@@ -1,3 +1,5 @@
 *.swp
 build
 *.pyc
+dist
+sasl.egg-info
