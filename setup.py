@@ -20,5 +20,6 @@ dist = setup (name = 'sasl',
        description = """Cyrus-SASL bindings for Python""",
        ext_modules = [sasl_module],
        py_modules = ["sasl.saslwrapper"],
+       include_package_data = True,
        )
 
