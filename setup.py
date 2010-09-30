@@ -12,11 +12,12 @@ sasl_module = Extension('_saslwrapper',
                            libraries=["sasl2"],
                            language="c++",
                            )
-
-setup (name = 'sasl',
+dist = setup (name = 'sasl',
        version = '0.1',
-       author      = "sasl",
-       description = """sasl""",
+       url = "http://github.com/toddlipcon/python-sasl/tree/master",
+       maintainer = "Todd Lipcon",
+       maintainer_email = "todd@cloudera.com",
+       description = """Cyrus-SASL bindings for Python""",
        ext_modules = [sasl_module],
        py_modules = ["sasl.saslwrapper"],
        )
