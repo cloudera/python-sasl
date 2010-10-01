@@ -42,6 +42,7 @@ namespace saslwrapper {
         bool encode(const string& clearText, output_string& cipherText);
         bool decode(const string& cipherText, output_string& clearText);
         bool getUserId(output_string& userId);
+        bool getSSF(output_int *ssf);
         void getError(output_string& error);
 
         void addCallback(unsigned long id, void* proc);
@@ -86,7 +87,6 @@ bool ClientImpl::init()
         }
     }
 
-    int cbIndex = 0;
 
     addCallback(SASL_CB_GETREALM, 0);
     if (!userName.empty()) {
@@ -289,6 +289,17 @@ bool ClientImpl::getUserId(output_string& userId)
     return true;
 }
 
+bool ClientImpl::getSSF(output_int *ssf)
+{
+    int result = sasl_getprop(conn, SASL_SSF, (const void **)&ssf);
+    if (result != SASL_OK) {
+        setError("sasl_getprop(SASL_SSF)", result);
+        return false;
+    }
+
+    return true;
+}
+
 void ClientImpl::getError(output_string& _error)
 {
     _error = error;
@@ -306,8 +317,19 @@ void ClientImpl::addCallback(unsigned long id, void* proc)
 void ClientImpl::setError(const string& context, int code, const string& text, const string& text2)
 {
     stringstream err;
-    string etext(text.empty() ? sasl_errdetail(conn) : text);
-    err << "Error in " << context << " (" << code << ") " << etext;
+    string errtext;
+
+    if (text.empty()) {
+        if (conn) {
+            errtext = sasl_errdetail(conn);
+        } else {
+            errtext = sasl_errstring(code, NULL, NULL);
+        }
+    } else {
+        errtext = text;
+    }
+
+    err << "Error in " << context << " (" << code << ") " << errtext;
     if (!text2.empty())
         err << " - " << text2;
     error = err.str();
@@ -379,5 +401,6 @@ bool Client::step(const string& challenge, output_string& response) { return imp
 bool Client::encode(const string& clearText, output_string& cipherText) { return impl->encode(clearText, cipherText); }
 bool Client::decode(const string& cipherText, output_string& clearText) { return impl->decode(cipherText, clearText); }
 bool Client::getUserId(output_string& userId) { return impl->getUserId(userId); }
+bool Client::getSSF(output_int *ssf) { return impl->getSSF(ssf); }
 void Client::getError(output_string& error) { impl->getError(error); }
 

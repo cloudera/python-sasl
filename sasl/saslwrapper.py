@@ -95,9 +95,11 @@ class Client(_object):
     def encode(*args): return _saslwrapper.Client_encode(*args)
     def decode(*args): return _saslwrapper.Client_decode(*args)
     def getUserId(*args): return _saslwrapper.Client_getUserId(*args)
+    def getSSF(*args): return _saslwrapper.Client_getSSF(*args)
     def getError(*args): return _saslwrapper.Client_getError(*args)
 Client_swigregister = _saslwrapper.Client_swigregister
 Client_swigregister(Client)
 
+append_result_tuple = _saslwrapper.append_result_tuple
 
 

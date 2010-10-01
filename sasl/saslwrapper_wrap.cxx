@@ -2505,12 +2505,13 @@ SWIG_Python_MustGetPtr(PyObject *obj, swig_type_info *ty, int argnum, int flags)
 /* -------- TYPES TABLE (BEGIN) -------- */
 
 #define SWIGTYPE_p_char swig_types[0]
-#define SWIGTYPE_p_saslwrapper__Client swig_types[1]
-#define SWIGTYPE_p_std__invalid_argument swig_types[2]
-#define SWIGTYPE_p_std__string swig_types[3]
-#define SWIGTYPE_p_swig__PySwigIterator swig_types[4]
-static swig_type_info *swig_types[6];
-static swig_module_info swig_module = {swig_types, 5, 0, 0, 0, 0};
+#define SWIGTYPE_p_int swig_types[1]
+#define SWIGTYPE_p_saslwrapper__Client swig_types[2]
+#define SWIGTYPE_p_std__invalid_argument swig_types[3]
+#define SWIGTYPE_p_std__string swig_types[4]
+#define SWIGTYPE_p_swig__PySwigIterator swig_types[5]
+static swig_type_info *swig_types[7];
+static swig_module_info swig_module = {swig_types, 6, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -3058,6 +3059,30 @@ using namespace saslwrapper;
 namespace saslwrapper {
 
 }
+
+static PyObject *append_result_tuple(PyObject *result, PyObject *to_append) {
+    if ((!result) || (result == Py_None)) {
+        return to_append;
+    } else {
+        // if not istuple(result):
+        //   result = (result, )
+        if (!PyTuple_Check(result)) {
+            PyObject *orig_result = result;
+            result = PyTuple_New(1);
+            PyTuple_SetItem(result, 0, orig_result);
+        }
+        
+        // tuple_to_append = (to_append, )
+        PyObject *tuple_to_append = PyTuple_New(1);
+        PyTuple_SetItem(tuple_to_append, 0, to_append);
+
+        PyObject *new_result = PySequence_Concat(result, tuple_to_append);
+        Py_DECREF(result);
+        Py_DECREF(tuple_to_append);
+        return new_result;
+    }
+}
+
 
 
 
@@ -4138,44 +4163,12 @@ SWIGINTERN PyObject *_wrap_Client_start(PyObject *SWIGUNUSEDPARM(self), PyObject
   result = (bool)(arg1)->start((std::string const &)*arg2,*arg3,*arg4);
   resultobj = SWIG_From_bool(static_cast< bool >(result));
   {
-    // Append output value arg3 to resultobj
-    PyObject *o, *o2, *o3;
-    o = PyString_FromStringAndSize(arg3->c_str(), arg3->length());
-    if ((!resultobj) || (resultobj == Py_None)) {
-      resultobj = o;
-    } else {
-      if (!PyTuple_Check(resultobj)) {
-        PyObject *o2 = resultobj;
-        resultobj = PyTuple_New(1);
-        PyTuple_SetItem(resultobj,0,o2);
-      }
-      o3 = PyTuple_New(1);
-      PyTuple_SetItem(o3,0,o);
-      o2 = resultobj;
-      resultobj = PySequence_Concat(o2,o3);
-      Py_DECREF(o2);
-      Py_DECREF(o3);
-    }
+    PyObject *o = PyString_FromStringAndSize(arg3->c_str(), arg3->length());
+    resultobj = append_result_tuple(resultobj, o);
   }
   {
-    // Append output value arg4 to resultobj
-    PyObject *o, *o2, *o3;
-    o = PyString_FromStringAndSize(arg4->c_str(), arg4->length());
-    if ((!resultobj) || (resultobj == Py_None)) {
-      resultobj = o;
-    } else {
-      if (!PyTuple_Check(resultobj)) {
-        PyObject *o2 = resultobj;
-        resultobj = PyTuple_New(1);
-        PyTuple_SetItem(resultobj,0,o2);
-      }
-      o3 = PyTuple_New(1);
-      PyTuple_SetItem(o3,0,o);
-      o2 = resultobj;
-      resultobj = PySequence_Concat(o2,o3);
-      Py_DECREF(o2);
-      Py_DECREF(o3);
-    }
+    PyObject *o = PyString_FromStringAndSize(arg4->c_str(), arg4->length());
+    resultobj = append_result_tuple(resultobj, o);
   }
   if (SWIG_IsNewObj(res2)) delete arg2;
   return resultobj;
@@ -4221,24 +4214,8 @@ SWIGINTERN PyObject *_wrap_Client_step(PyObject *SWIGUNUSEDPARM(self), PyObject 
   result = (bool)(arg1)->step((std::string const &)*arg2,*arg3);
   resultobj = SWIG_From_bool(static_cast< bool >(result));
   {
-    // Append output value arg3 to resultobj
-    PyObject *o, *o2, *o3;
-    o = PyString_FromStringAndSize(arg3->c_str(), arg3->length());
-    if ((!resultobj) || (resultobj == Py_None)) {
-      resultobj = o;
-    } else {
-      if (!PyTuple_Check(resultobj)) {
-        PyObject *o2 = resultobj;
-        resultobj = PyTuple_New(1);
-        PyTuple_SetItem(resultobj,0,o2);
-      }
-      o3 = PyTuple_New(1);
-      PyTuple_SetItem(o3,0,o);
-      o2 = resultobj;
-      resultobj = PySequence_Concat(o2,o3);
-      Py_DECREF(o2);
-      Py_DECREF(o3);
-    }
+    PyObject *o = PyString_FromStringAndSize(arg3->c_str(), arg3->length());
+    resultobj = append_result_tuple(resultobj, o);
   }
   if (SWIG_IsNewObj(res2)) delete arg2;
   return resultobj;
@@ -4284,24 +4261,8 @@ SWIGINTERN PyObject *_wrap_Client_encode(PyObject *SWIGUNUSEDPARM(self), PyObjec
   result = (bool)(arg1)->encode((std::string const &)*arg2,*arg3);
   resultobj = SWIG_From_bool(static_cast< bool >(result));
   {
-    // Append output value arg3 to resultobj
-    PyObject *o, *o2, *o3;
-    o = PyString_FromStringAndSize(arg3->c_str(), arg3->length());
-    if ((!resultobj) || (resultobj == Py_None)) {
-      resultobj = o;
-    } else {
-      if (!PyTuple_Check(resultobj)) {
-        PyObject *o2 = resultobj;
-        resultobj = PyTuple_New(1);
-        PyTuple_SetItem(resultobj,0,o2);
-      }
-      o3 = PyTuple_New(1);
-      PyTuple_SetItem(o3,0,o);
-      o2 = resultobj;
-      resultobj = PySequence_Concat(o2,o3);
-      Py_DECREF(o2);
-      Py_DECREF(o3);
-    }
+    PyObject *o = PyString_FromStringAndSize(arg3->c_str(), arg3->length());
+    resultobj = append_result_tuple(resultobj, o);
   }
   if (SWIG_IsNewObj(res2)) delete arg2;
   return resultobj;
@@ -4347,24 +4308,8 @@ SWIGINTERN PyObject *_wrap_Client_decode(PyObject *SWIGUNUSEDPARM(self), PyObjec
   result = (bool)(arg1)->decode((std::string const &)*arg2,*arg3);
   resultobj = SWIG_From_bool(static_cast< bool >(result));
   {
-    // Append output value arg3 to resultobj
-    PyObject *o, *o2, *o3;
-    o = PyString_FromStringAndSize(arg3->c_str(), arg3->length());
-    if ((!resultobj) || (resultobj == Py_None)) {
-      resultobj = o;
-    } else {
-      if (!PyTuple_Check(resultobj)) {
-        PyObject *o2 = resultobj;
-        resultobj = PyTuple_New(1);
-        PyTuple_SetItem(resultobj,0,o2);
-      }
-      o3 = PyTuple_New(1);
-      PyTuple_SetItem(o3,0,o);
-      o2 = resultobj;
-      resultobj = PySequence_Concat(o2,o3);
-      Py_DECREF(o2);
-      Py_DECREF(o3);
-    }
+    PyObject *o = PyString_FromStringAndSize(arg3->c_str(), arg3->length());
+    resultobj = append_result_tuple(resultobj, o);
   }
   if (SWIG_IsNewObj(res2)) delete arg2;
   return resultobj;
@@ -4396,24 +4341,40 @@ SWIGINTERN PyObject *_wrap_Client_getUserId(PyObject *SWIGUNUSEDPARM(self), PyOb
   result = (bool)(arg1)->getUserId(*arg2);
   resultobj = SWIG_From_bool(static_cast< bool >(result));
   {
+    PyObject *o = PyString_FromStringAndSize(arg2->c_str(), arg2->length());
+    resultobj = append_result_tuple(resultobj, o);
+  }
+  return resultobj;
+fail:
+  return NULL;
+}
+
+
+SWIGINTERN PyObject *_wrap_Client_getSSF(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  saslwrapper::Client *arg1 = (saslwrapper::Client *) 0 ;
+  saslwrapper::output_int *arg2 = (saslwrapper::output_int *) 0 ;
+  void *argp1 = 0 ;
+  int res1 = 0 ;
+  int temp2 ;
+  PyObject * obj0 = 0 ;
+  bool result;
+  
+  {
+    temp2 = 0;
+    arg2 = &temp2;
+  }
+  if (!PyArg_ParseTuple(args,(char *)"O:Client_getSSF",&obj0)) SWIG_fail;
+  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_saslwrapper__Client, 0 |  0 );
+  if (!SWIG_IsOK(res1)) {
+    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "Client_getSSF" "', argument " "1"" of type '" "saslwrapper::Client *""'"); 
+  }
+  arg1 = reinterpret_cast< saslwrapper::Client * >(argp1);
+  result = (bool)(arg1)->getSSF(arg2);
+  resultobj = SWIG_From_bool(static_cast< bool >(result));
+  {
     // Append output value arg2 to resultobj
-    PyObject *o, *o2, *o3;
-    o = PyString_FromStringAndSize(arg2->c_str(), arg2->length());
-    if ((!resultobj) || (resultobj == Py_None)) {
-      resultobj = o;
-    } else {
-      if (!PyTuple_Check(resultobj)) {
-        PyObject *o2 = resultobj;
-        resultobj = PyTuple_New(1);
-        PyTuple_SetItem(resultobj,0,o2);
-      }
-      o3 = PyTuple_New(1);
-      PyTuple_SetItem(o3,0,o);
-      o2 = resultobj;
-      resultobj = PySequence_Concat(o2,o3);
-      Py_DECREF(o2);
-      Py_DECREF(o3);
-    }
+    resultobj = append_result_tuple(resultobj, PyInt_FromLong( (long)*arg2 ));
   }
   return resultobj;
 fail:
@@ -4442,24 +4403,8 @@ SWIGINTERN PyObject *_wrap_Client_getError(PyObject *SWIGUNUSEDPARM(self), PyObj
   (arg1)->getError(*arg2);
   resultobj = SWIG_Py_Void();
   {
-    // Append output value arg2 to resultobj
-    PyObject *o, *o2, *o3;
-    o = PyString_FromStringAndSize(arg2->c_str(), arg2->length());
-    if ((!resultobj) || (resultobj == Py_None)) {
-      resultobj = o;
-    } else {
-      if (!PyTuple_Check(resultobj)) {
-        PyObject *o2 = resultobj;
-        resultobj = PyTuple_New(1);
-        PyTuple_SetItem(resultobj,0,o2);
-      }
-      o3 = PyTuple_New(1);
-      PyTuple_SetItem(o3,0,o);
-      o2 = resultobj;
-      resultobj = PySequence_Concat(o2,o3);
-      Py_DECREF(o2);
-      Py_DECREF(o3);
-    }
+    PyObject *o = PyString_FromStringAndSize(arg2->c_str(), arg2->length());
+    resultobj = append_result_tuple(resultobj, o);
   }
   return resultobj;
 fail:
@@ -4473,6 +4418,25 @@ SWIGINTERN PyObject *Client_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObjec
   SWIG_TypeNewClientData(SWIGTYPE_p_saslwrapper__Client, SWIG_NewClientData(obj));
   return SWIG_Py_Void();
 }
+
+SWIGINTERN PyObject *_wrap_append_result_tuple(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
+  PyObject *resultobj = 0;
+  PyObject *arg1 = (PyObject *) 0 ;
+  PyObject *arg2 = (PyObject *) 0 ;
+  PyObject * obj0 = 0 ;
+  PyObject * obj1 = 0 ;
+  PyObject *result = 0 ;
+  
+  if (!PyArg_ParseTuple(args,(char *)"OO:append_result_tuple",&obj0,&obj1)) SWIG_fail;
+  arg1 = obj0;
+  arg2 = obj1;
+  result = (PyObject *)append_result_tuple(arg1,arg2);
+  resultobj = result;
+  return resultobj;
+fail:
+  return NULL;
+}
+
 
 static PyMethodDef SwigMethods[] = {
 	 { (char *)"delete_PySwigIterator", _wrap_delete_PySwigIterator, METH_VARARGS, NULL},
@@ -4501,8 +4465,10 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"Client_encode", _wrap_Client_encode, METH_VARARGS, NULL},
 	 { (char *)"Client_decode", _wrap_Client_decode, METH_VARARGS, NULL},
 	 { (char *)"Client_getUserId", _wrap_Client_getUserId, METH_VARARGS, NULL},
+	 { (char *)"Client_getSSF", _wrap_Client_getSSF, METH_VARARGS, NULL},
 	 { (char *)"Client_getError", _wrap_Client_getError, METH_VARARGS, NULL},
 	 { (char *)"Client_swigregister", Client_swigregister, METH_VARARGS, NULL},
+	 { (char *)"append_result_tuple", _wrap_append_result_tuple, METH_VARARGS, NULL},
 	 { NULL, NULL, 0, NULL }
 };
 
@@ -4510,6 +4476,7 @@ static PyMethodDef SwigMethods[] = {
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (BEGIN) -------- */
 
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_int = {"_p_int", "saslwrapper::output_int *|int *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_saslwrapper__Client = {"_p_saslwrapper__Client", "saslwrapper::Client *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__invalid_argument = {"_p_std__invalid_argument", "std::invalid_argument *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__string = {"_p_std__string", "std::string *|saslwrapper::output_string *", 0, 0, (void*)0, 0};
@@ -4517,6 +4484,7 @@ static swig_type_info _swigt__p_swig__PySwigIterator = {"_p_swig__PySwigIterator
 
 static swig_type_info *swig_type_initial[] = {
   &_swigt__p_char,
+  &_swigt__p_int,
   &_swigt__p_saslwrapper__Client,
   &_swigt__p_std__invalid_argument,
   &_swigt__p_std__string,
@@ -4524,6 +4492,7 @@ static swig_type_info *swig_type_initial[] = {
 };
 
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_int[] = {  {&_swigt__p_int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_saslwrapper__Client[] = {  {&_swigt__p_saslwrapper__Client, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__invalid_argument[] = {  {&_swigt__p_std__invalid_argument, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__string[] = {  {&_swigt__p_std__string, 0, 0, 0},{0, 0, 0, 0}};
@@ -4531,6 +4500,7 @@ static swig_cast_info _swigc__p_swig__PySwigIterator[] = {  {&_swigt__p_swig__Py
 
 static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_char,
+  _swigc__p_int,
   _swigc__p_saslwrapper__Client,
   _swigc__p_std__invalid_argument,
   _swigc__p_std__string,

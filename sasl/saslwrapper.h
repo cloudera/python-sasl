@@ -35,6 +35,8 @@ namespace saslwrapper {
      *      boolResult, out1, out2 = function(input)
      */
     typedef std::string output_string;
+    typedef int output_int;
+
     class ClientImpl;
 
     class Client {
@@ -123,6 +125,13 @@ namespace saslwrapper {
          * @param userId (output) Authenticated user ID for this session.
          */
         bool getUserId(output_string& userId);
+
+        /**
+         * Get the security strength factor associated with this session.
+         *
+         * @param ssf (output) Negotiated SSF value.
+         */
+        bool getSSF(output_int *ssf);
 
         /**
          * Get error message for last error.

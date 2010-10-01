@@ -143,24 +143,18 @@
 }
 
 %typemap(argout) saslwrapper::output_string& {
+    PyObject *o = PyString_FromStringAndSize($1->c_str(), $1->length());
+    $result = append_result_tuple($result, o);
+}
+
+%typemap(in, numinputs=0) saslwrapper::output_int *(int temp) {
+    temp = 0;
+    $1 = &temp;
+}
+
+%typemap(argout) saslwrapper::output_int *{
     // Append output value $1 to $result
-    PyObject *o, *o2, *o3;
-    o = PyString_FromStringAndSize($1->c_str(), $1->length());
-    if ((!$result) || ($result == Py_None)) {
-        $result = o;
-    } else {
-        if (!PyTuple_Check($result)) {
-            PyObject *o2 = $result;
-            $result = PyTuple_New(1);
-            PyTuple_SetItem($result,0,o2);
-        }
-        o3 = PyTuple_New(1);
-        PyTuple_SetItem(o3,0,o);
-        o2 = $result;
-        $result = PySequence_Concat(o2,o3);
-        Py_DECREF(o2);
-        Py_DECREF(o3);
-    }
+    $result = append_result_tuple($result, PyInt_FromLong( (long)*$1 ));
 }
 
 %{
@@ -178,7 +172,33 @@ using namespace saslwrapper;
 namespace saslwrapper {
 
 }
+
+static PyObject *append_result_tuple(PyObject *result, PyObject *to_append) {
+    if ((!result) || (result == Py_None)) {
+        return to_append;
+    } else {
+        // if not istuple(result):
+        //   result = (result, )
+        if (!PyTuple_Check(result)) {
+            PyObject *orig_result = result;
+            result = PyTuple_New(1);
+            PyTuple_SetItem(result, 0, orig_result);
+        }
+        
+        // tuple_to_append = (to_append, )
+        PyObject *tuple_to_append = PyTuple_New(1);
+        PyTuple_SetItem(tuple_to_append, 0, to_append);
+
+        PyObject *new_result = PySequence_Concat(result, tuple_to_append);
+        Py_DECREF(result);
+        Py_DECREF(tuple_to_append);
+        return new_result;
+    }
 }
+
+}
+
+
 
 %{
 
