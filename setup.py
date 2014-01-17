@@ -13,7 +13,7 @@ sasl_module = Extension('_saslwrapper',
                            language="c++",
                            )
 dist = setup (name = 'sasl',
-       version = '0.1.2',
+       version = '0.1.3',
        url = "http://github.com/toddlipcon/python-sasl/tree/master",
        maintainer = "Todd Lipcon",
        maintainer_email = "todd@cloudera.com",
