@@ -1,1 +1,4 @@
-include sasl/saslwrapper.h
+include LICENSE.txt
+include setup.py
+
+graft sasl
