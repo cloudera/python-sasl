@@ -24,6 +24,7 @@ setup(name='sasl',
       url="http://github.com/cloudera/python-sasl",
       maintainer="Todd Lipcon",
       maintainer_email="todd@cloudera.com",
+      license="Apache-2.0",
       description="""Cyrus-SASL bindings for Python""",
       classifiers=[
         'Programming Language :: Python :: 2',
