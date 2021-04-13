@@ -12,7 +12,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Parts of this file were taken from the pandas project
+# (https://github.com/pandas-dev/pandas), which is permitted for use under
+# the BSD 3-Clause License
+
+from distutils.sysconfig import get_config_var
+from distutils.version import LooseVersion
+import os
+import platform
 from setuptools import setup, Extension
+import sys
+
+
+# From https://github.com/pandas-dev/pandas/pull/24274:
+# For mac, ensure extensions are built for macos 10.9 when compiling on a
+# 10.9 system or above, overriding distuitls behaviour which is to target
+# the version that python was built for. This may be overridden by setting
+# MACOSX_DEPLOYMENT_TARGET before calling setup.py
+if sys.platform == 'darwin':
+    if 'MACOSX_DEPLOYMENT_TARGET' not in os.environ:
+        current_system = LooseVersion(platform.mac_ver()[0])
+        python_target = LooseVersion(
+            get_config_var('MACOSX_DEPLOYMENT_TARGET'))
+        if python_target < '10.9' and current_system >= '10.9':
+            os.environ['MACOSX_DEPLOYMENT_TARGET'] = '10.9'
+
 
 sasl_module = Extension('sasl.saslwrapper',
                         sources=['sasl/saslwrapper.cpp'],
