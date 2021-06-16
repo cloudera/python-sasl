@@ -27,8 +27,6 @@ PKG_NAME=sasl
 GIT_REPO="python-sasl"
 GIT_URL="https://github.com/${GITHUB_ACCOUNT}/${GIT_REPO}.git"
 
-BDIST_TMP_DIR="${PIP_DISTS_BUILD_DIR}/tmp"
-WHEELHOUSE_DIR="${PIP_DISTS_BUILD_DIR}/wheelhouse"
 SDIST_DIR="${PIP_DISTS_BUILD_DIR}/sdist"
 
 SYSTEM_REQUIREMENTS=(cyrus-sasl cyrus-sasl-devel)
@@ -54,37 +52,6 @@ prepare_system() {
 is_cpython2() {
   local pyver_abi="$1"
   [[ "$pyver_abi" =~ ^cp2 ]]
-}
-
-build_wheels() {
-  # Compile wheels for all python versions
-  local pydir=""
-  local wheel_path=""
-  for pydir in /opt/python/*; do
-    # Do not build wheels for cpython2
-    local pyver_abi="$(basename $pydir)"
-    if is_cpython2 "$pyver_abi"; then continue; fi
-
-    echo "Building wheel with $(${pydir}/bin/python -V 2>&1)"
-    "${pydir}/bin/python" setup.py bdist_wheel -d "$BDIST_TMP_DIR"
-		wheel_path="$(ls ${BDIST_TMP_DIR}/*.whl)"
-  done
-
-  if [ -z "wheel_path" ]; then
-    echo "Failed building wheels. Couldn't find python>=3.0"
-    exit 1
-  fi
-}
-
-repair_wheels() {
-  # Bundle external shared libraries into the wheels
-  for whl in "${BDIST_TMP_DIR}/"*.whl; do
-    auditwheel repair $whl -w "$WHEELHOUSE_DIR"
-  done
-}
-
-show_wheels() {
-  ls -l "${WHEELHOUSE_DIR}/"*.whl
 }
 
 build_sdist() {
@@ -160,31 +127,9 @@ EOF
     python /tmp/sanity_check.py
     tear_down_virt_env
   done
-
-  # Install wheels with different python versions and run sanity_check.
-  # System requirements can be removed as the wheels should already include them.
-  yum remove -y "${SYSTEM_REQUIREMENTS[@]}"
-  yum remove -y "${BUILD_REQUIREMENTS[@]}"
-
-  for pydir in /opt/python/*; do
-    # Haven't built wheels for cpython2, skip cpython2 testing
-    local pyver_abi="$(basename $pydir)"
-    if is_cpython2 "$pyver_abi"; then continue; fi
-
-    local whlfn="$(ls ${WHEELHOUSE_DIR}/${PKG_NAME}-*-${pyver_abi}-*.whl)"
-
-    set_up_virt_env "$pydir"
-    pip install --no-cache-dir --only-binary "$PKG_NAME" "$whlfn"
-    python /tmp/sanity_check.py
-    tear_down_virt_env
-  done
 }
 
 prepare_system
-
-build_wheels
-repair_wheels
-show_wheels
 
 build_sdist
 show_sdist
