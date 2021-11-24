@@ -38,10 +38,13 @@ if sys.platform == 'darwin':
             os.environ['MACOSX_DEPLOYMENT_TARGET'] = '10.9'
 
 
+extra_compile_args = ["/DWIN32"] if sys.platform == "win32" else []
+
 sasl_module = Extension('sasl.saslwrapper',
                         sources=['sasl/saslwrapper.cpp'],
                         include_dirs=["sasl"],
                         libraries=["sasl2"],
+                        extra_compile_args=extra_compile_args,
                         language="c++")
 setup(name='sasl',
       version='0.3.1',
@@ -56,5 +59,6 @@ setup(name='sasl',
       packages=['sasl'],
       install_requires=['six'],
       ext_modules=[sasl_module],
+      package_data={'sasl': ['*.dll']},
       include_package_data=True,
       license='Apache License, Version 2.0')
