@@ -20,6 +20,7 @@
 #include <stdint.h>
 #include <string>
 #include <sasl/sasl.h>
+#include <sasl/saslutil.h>
 #include <sstream>
 #include <stdlib.h>
 #include <string.h>
