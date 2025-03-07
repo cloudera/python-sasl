@@ -13,3 +13,5 @@
 # limitations under the License.
 
 from sasl.saslwrapper import *
+
+__version__ = u'0.4a1'
